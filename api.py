@@ -1,37 +1,42 @@
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
-
-models = ["optimistic", "pessimistic", ""]
-# Turn dests and origins into map to pass one data structre
-dests = []
-origins = []
-key = "AIzaSyAHxTaivFtueStNRNX9LlDXyl_NA-JwwfQ"
+import configs
+import json
+import datetime
 
 
-def call(dest, origin, time, key):
+models = ["optimistic", "pessimistic", "best_guess"]
+routes = {"41.8839,-87.6319": "34.0537,-118.2427", "24.5551,-81.7800": "-124.635404,48.327961"}
+key = configs.API_KEY
+seconds = 30
+
+
+def call(dest, origin):
     resps = list()
-    for model in list:
-        response = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?destinations={}&origins={}"
-                                "&departure_time={}&traffic_model={}&key={}".format(dest, origin, time, model, key))
-        resps.append(response.content)
+    curr = int(time.time()) + 10
+    for model in models:
+        response = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?destinations={}"
+                                           "&origins={}&departure_time={}&traffic_model={}&key={}"
+                                           .format(dest, origin, curr, model, key)).json()
+        print(response)
+        #print("Got results from {} to {}: {} travel time".format(response.get("origin_addresses"),
+                                                                 #response.get("destination_addresses"),
+                                                                 #response.get("rows")[0].get("elements")[0]
+                                                                 #.get("duration").get("text")))
+        resps.append(response)
+    print(resps)
     return resps
 
 
-def routes():
-    # Iterate over dests/origin map and pass to calls
-    return None
-
 def caller():
-    # Interim function that clock calls
-    # This calls routes and call.
-    # Routes passes the current route to call as well as other params
-    return None
+    for key, value in routes.items():
+        call(key, value)
 
 
 def clock():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(caller, 'interval', seconds=30)
+    scheduler.add_job(caller, 'interval', seconds = seconds)
     scheduler.start()
 
     try:
@@ -41,3 +46,10 @@ def clock():
     except (KeyboardInterrupt, SystemExit):
         # Not strictly necessary if daemonic mode is enabled but should be done if possible
         scheduler.shutdown()
+
+print("Starting Google Maps API Caller...")
+print("Running {} routes every {} seconds".format(len(routes), seconds))
+start = int(time.time())
+clock()
+end = int(time.time())
+print("Total elapsed time: {}".format(str(datetime.timedelta(seconds=(end - start)))))
