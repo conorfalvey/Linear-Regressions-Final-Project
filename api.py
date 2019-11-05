@@ -20,7 +20,6 @@ def db_insert(curr_time, route, model, distance, duration_text, duration, durati
 
 
 def call(dest, origin):
-    resps = list()
     if dest == list(routes.keys())[0]:
         curr_route = 0
     else:
