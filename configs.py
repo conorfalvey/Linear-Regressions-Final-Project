@@ -1,8 +1,8 @@
-API_KEY = "" #Add key here
+API_KEY = ""  # Add key here
 DB_USER = "postgres"
-DB_PASSWORD = "" # postgres password
+DB_PASSWORD = ""  # postgres password
 
-#Heres the commands to create the database table so it all inserts properly
+# Heres the commands to create the database table so it all inserts properly
 '''
 CREATE TABLE maps (
 time integer,
