@@ -1,6 +1,6 @@
-API_KEY = ""  # Add key here
+API_KEY = "AIzaSyAHxTaivFtueStNRNX9LlDXyl_NA-JwwfQ"  # Add key here
 DB_USER = "postgres"
-DB_PASSWORD = ""  # postgres password
+DB_PASSWORD = "04229152"  # postgres password
 
 # Heres the commands to create the database table so it all inserts properly
 '''
